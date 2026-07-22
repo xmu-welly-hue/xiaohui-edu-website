@@ -57,12 +57,10 @@ export function Hero() {
           </a>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-fade-in-up delay-600">
-          <div className="w-6 h-10 rounded-full border-2 border-brand-border flex items-start justify-center p-1.5">
-            <div className="w-1 h-2.5 rounded-full bg-brand-orange animate-bounce" />
-          </div>
-        </div>
+        {/* Scroll hint */}
+        <p className="mt-8 text-sm text-brand-text-muted animate-fade-in-up delay-500">
+          下滑可了解更多
+        </p>
       </div>
     </section>
   );
