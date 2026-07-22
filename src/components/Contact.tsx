@@ -1,9 +1,96 @@
 'use client';
 
+import { useState } from 'react';
 import { useSectionReveal } from '@/hooks/use-section-reveal';
+
+const FEISHU_FORM_URL = 'https://bcncx6oe0mh4.feishu.cn/share/base/shrcnDxfxTZp8dM9BxYmQ9B6VLb';
+
+const GRADE_OPTIONS = [
+  { value: '六年级', label: '六年级' },
+  { value: '七年级', label: '七年级' },
+  { value: '八年级', label: '八年级' },
+  { value: '九年级', label: '九年级' },
+];
+
+const SUBJECT_OPTIONS = [
+  { value: '数学', label: '数学' },
+  { value: '物理', label: '物理' },
+  { value: '数学+物理', label: '数学+物理' },
+];
+
+const CLASS_TYPE_OPTIONS = [
+  { value: '培优班', label: '培优班 - 基础薄弱·夯实校内' },
+  { value: '进阶班', label: '进阶班 - 中等提分·突破瓶颈' },
+  { value: '冲刺班', label: '冲刺班 - 冲刺满分·压轴突破' },
+  { value: '超纲班', label: '超纲班 - 高阶方法·降维打击' },
+];
+
+interface FormData {
+  name: string;
+  phone: string;
+  grade: string;
+  subject: string;
+  classType: string;
+  remark: string;
+}
 
 export function Contact() {
   const ref = useSectionReveal();
+  const [iframeLoaded, setIframeLoaded] = useState(false);
+  const [iframeError, setIframeError] = useState(false);
+  const [showFallbackForm, setShowFallbackForm] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    phone: '',
+    grade: '',
+    subject: '',
+    classType: '',
+    remark: '',
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitResult, setSubmitResult] = useState<{ success: boolean; message: string } | null>(null);
+
+  const handleIframeLoad = () => {
+    setIframeLoaded(true);
+  };
+
+  const handleIframeError = () => {
+    setIframeError(true);
+    setShowFallbackForm(true);
+  };
+
+  const handleInputChange = (field: keyof FormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setSubmitResult(null);
+
+    try {
+      const response = await fetch('/api/feishu/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setSubmitResult({ success: true, message: data.message || '报名信息已提交，小灰老师会尽快与您联系' });
+        setFormData({ name: '', phone: '', grade: '', subject: '', classType: '', remark: '' });
+      } else {
+        setSubmitResult({ success: false, message: data.error || '提交失败，请稍后重试' });
+      }
+    } catch {
+      setSubmitResult({ success: false, message: '网络错误，请稍后重试或直接联系小灰老师' });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <section id="contact" className="py-24 md:py-32 relative">
@@ -127,69 +214,183 @@ export function Contact() {
               </div>
             </div>
 
-            {/* Registration form placeholder */}
-            <div className="p-8 rounded-2xl border border-brand-border bg-brand-bg-card/50">
+            {/* Registration form */}
+            <div className="p-8 rounded-2xl border border-brand-border bg-brand-bg-card/50 min-h-[500px] flex flex-col">
               <h3 className="text-xl font-semibold text-brand-text mb-6">
                 预约报名
               </h3>
-              <form
-                action="https://bcncx6oe0mh4.feishu.cn/share/base/shrcnDxfxTZp8dM9BxYmQ9B6VLb"
-                method="get"
-                target="_blank"
-                className="space-y-4"
-              >
-                <div>
-                  <label className="block text-sm text-brand-text-secondary mb-1.5">
-                    学生姓名
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="请输入学生姓名"
-                    className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors"
+
+              {/* Iframe mode */}
+              {!showFallbackForm && !iframeError && (
+                <div className="flex-1 relative">
+                  {/* Loading state */}
+                  {!iframeLoaded && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="w-8 h-8 border-2 border-brand-orange border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                        <p className="text-sm text-brand-text-muted">加载报名表中...</p>
+                        <button
+                          onClick={() => setShowFallbackForm(true)}
+                          className="mt-4 text-xs text-brand-orange hover:underline"
+                        >
+                          加载失败？点击使用备用表单
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  <iframe
+                    src={FEISHU_FORM_URL}
+                    className={`w-full h-full min-h-[400px] rounded-xl border border-brand-border bg-brand-bg transition-opacity duration-300 ${
+                      iframeLoaded ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    onLoad={handleIframeLoad}
+                    onError={handleIframeError}
+                    title="飞书报名表单"
+                    allow="clipboard-write"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm text-brand-text-secondary mb-1.5">
-                    当前年级
-                  </label>
-                  <select className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text focus:outline-none focus:border-brand-orange/50 transition-colors appearance-none">
-                    <option value="">请选择年级</option>
-                    <option value="6">六年级</option>
-                    <option value="7">七年级</option>
-                    <option value="8">八年级</option>
-                    <option value="9">九年级</option>
-                  </select>
+              )}
+
+              {/* Fallback form mode */}
+              {(showFallbackForm || iframeError) && (
+                <div className="flex-1">
+                  {submitResult ? (
+                    <div className={`p-6 rounded-xl text-center ${
+                      submitResult.success 
+                        ? 'bg-green-500/10 border border-green-500/30' 
+                        : 'bg-red-500/10 border border-red-500/30'
+                    }`}>
+                      <div className={`w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center ${
+                        submitResult.success ? 'bg-green-500/20' : 'bg-red-500/20'
+                      }`}>
+                        {submitResult.success ? (
+                          <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        ) : (
+                          <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        )}
+                      </div>
+                      <p className={`font-medium mb-2 ${submitResult.success ? 'text-green-400' : 'text-red-400'}`}>
+                        {submitResult.success ? '提交成功' : '提交失败'}
+                      </p>
+                      <p className="text-sm text-brand-text-secondary mb-4">
+                        {submitResult.message}
+                      </p>
+                      {submitResult.success && (
+                        <button
+                          onClick={() => setSubmitResult(null)}
+                          className="text-sm text-brand-orange hover:underline"
+                        >
+                          继续提交
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <div>
+                        <label className="block text-sm text-brand-text-secondary mb-1.5">
+                          学生姓名 <span className="text-brand-orange">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.name}
+                          onChange={(e) => handleInputChange('name', e.target.value)}
+                          placeholder="请输入学生姓名"
+                          required
+                          className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm text-brand-text-secondary mb-1.5">
+                          联系电话 <span className="text-brand-orange">*</span>
+                        </label>
+                        <input
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          placeholder="请输入手机号码"
+                          required
+                          pattern="^1[3-9]\d{9}$"
+                          className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm text-brand-text-secondary mb-1.5">
+                            当前年级 <span className="text-brand-orange">*</span>
+                          </label>
+                          <select
+                            value={formData.grade}
+                            onChange={(e) => handleInputChange('grade', e.target.value)}
+                            required
+                            className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text focus:outline-none focus:border-brand-orange/50 transition-colors appearance-none"
+                          >
+                            <option value="">请选择</option>
+                            {GRADE_OPTIONS.map(opt => (
+                              <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm text-brand-text-secondary mb-1.5">
+                            辅导科目
+                          </label>
+                          <select
+                            value={formData.subject}
+                            onChange={(e) => handleInputChange('subject', e.target.value)}
+                            className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text focus:outline-none focus:border-brand-orange/50 transition-colors appearance-none"
+                          >
+                            <option value="">请选择</option>
+                            {SUBJECT_OPTIONS.map(opt => (
+                              <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm text-brand-text-secondary mb-1.5">
+                          意向班型
+                        </label>
+                        <select
+                          value={formData.classType}
+                          onChange={(e) => handleInputChange('classType', e.target.value)}
+                          className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text focus:outline-none focus:border-brand-orange/50 transition-colors appearance-none"
+                        >
+                          <option value="">请选择</option>
+                          {CLASS_TYPE_OPTIONS.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm text-brand-text-secondary mb-1.5">
+                          备注信息
+                        </label>
+                        <textarea
+                          value={formData.remark}
+                          onChange={(e) => handleInputChange('remark', e.target.value)}
+                          placeholder="请描述学生目前学习情况与目标（选填）"
+                          rows={3}
+                          className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors resize-none"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="w-full py-3.5 bg-brand-orange text-brand-bg font-semibold rounded-xl hover:bg-brand-orange-hover transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-orange/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {submitting ? '提交中...' : '提交预约'}
+                      </button>
+                      <p className="text-xs text-brand-text-muted text-center">
+                        提交后小灰老师会尽快与您联系确认
+                      </p>
+                    </form>
+                  )}
                 </div>
-                <div>
-                  <label className="block text-sm text-brand-text-secondary mb-1.5">
-                    联系电话
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="请输入联系电话"
-                    className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-brand-text-secondary mb-1.5">
-                    备注信息
-                  </label>
-                  <textarea
-                    placeholder="请描述学生目前学习情况与目标（选填）"
-                    rows={3}
-                    className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors resize-none"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full py-3.5 bg-brand-orange text-brand-bg font-semibold rounded-xl hover:bg-brand-orange-hover transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-orange/20"
-                >
-                  提交预约
-                </button>
-                <p className="text-xs text-brand-text-muted text-center">
-                  提交后小灰老师会尽快与您联系确认
-                </p>
-              </form>
+              )}
             </div>
           </div>
         </div>

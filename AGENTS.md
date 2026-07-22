@@ -16,7 +16,11 @@ src/
 ├── app/
 │   ├── layout.tsx          # 全局布局，metadata 配置
 │   ├── page.tsx            # 主页面，组装所有板块
-│   └── globals.css         # 全局样式、品牌色变量、动画
+│   ├── globals.css         # 全局样式、品牌色变量、动画
+│   └── api/
+│       └── feishu/
+│           └── submit/
+│               └── route.ts # 飞书多维表格提交 API
 ├── components/
 │   ├── Navbar.tsx           # 固定导航栏（毛玻璃效果）
 │   ├── Hero.tsx             # Hero 首屏
@@ -25,7 +29,7 @@ src/
 │   ├── Features.tsx         # 教学特色（5卡片）
 │   ├── Pricing.tsx          # 班型与定价
 │   ├── FAQ.tsx              # FAQ 手风琴
-│   ├── Contact.tsx          # 联系板块 + 报名表单
+│   ├── Contact.tsx          # 联系板块 + iframe/备用表单
 │   ├── Footer.tsx           # 页脚
 │   └── ui/                  # shadcn/ui 组件库
 ├── hooks/
@@ -33,6 +37,16 @@ src/
 └── lib/
     └── utils.ts             # 通用工具
 ```
+
+## 环境变量
+- `FEISHU_APP_ID` - 飞书应用 App ID（用于 API 提交）
+- `FEISHU_APP_SECRET` - 飞书应用 App Secret（用于 API 提交）
+
+## API 接口
+- `POST /api/feishu/submit` - 提交报名数据到飞书多维表格
+  - 字段：姓名、电话、年级、科目、来源、意向班型、备注
+  - base_token: Fpp7bc8PgaFd6KsqtsnckGzonod
+  - table_id: tblmL0Bko5x4J7UQ
 
 ## 开发命令
 - `pnpm dev` - 启动开发服务器
