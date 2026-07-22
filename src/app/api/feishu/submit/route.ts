@@ -141,19 +141,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Map source to match Feishu Bitable options
+    // Bitable options: 转介绍、羽毛球、微信、其他、官网测试
+    const mappedSource = (() => {
+      switch (source) {
+        case '官网': return '官网测试';
+        case '朋友推荐': return '转介绍';
+        case '微信': return '微信';
+        case '其他': return '其他';
+        default: return '官网测试';
+      }
+    })();
+
     // Prepare fields for Feishu Bitable
-    // Note: Multi-select fields in Feishu Bitable require array format
+    // Field types from Bitable:
+    // - 姓名: Text (type 1)
+    // - 联系电话: Phone (type 13)
+    // - 年级: SingleSelect (type 3) - options: 六年级、七年级、八年级、九年级
+    // - 科目: MultiSelect (type 4) - options: 数学、物理
+    // - 来源: SingleSelect (type 3) - options: 转介绍、羽毛球、微信、其他、官网测试
+    // - 意向班型: SingleSelect (type 3) - options: 培优班、进阶班、冲刺班、超纲班
+    // - 备注: Text (type 1)
+    // - 提交时间: DateTime (type 5) - needs millisecond timestamp
     const fields: Record<string, unknown> = {
       '姓名': name,
-      '电话': phone,
+      '联系电话': phone,
       '年级': grade,
       '科目': subject ? [subject] : [],
-      '来源': source ? [source || '官网'] : ['官网'],
-      '意向班型': classType ? [classType] : [],
+      '来源': mappedSource,
+      '意向班型': classType || '',
       '备注': remark || '',
+      '提交时间': Date.now(),
     };
 
-    console.log(`[Feishu API] Processing submission for: ${name}, ${phone}, ${grade}`);
+    console.log(`[Feishu API] Processing submission: name=${name}, grade=${grade}, source=${mappedSource}`);
 
     // Get tenant access token
     const tokenResult = await getTenantAccessToken();
