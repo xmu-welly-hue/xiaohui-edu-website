@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { useSectionReveal } from '@/hooks/use-section-reveal';
 
-const FEISHU_FORM_URL = 'https://bcncx6oe0mh4.feishu.cn/share/base/shrcnDxfxTZp8dM9BxYmQ9B6VLb';
-
 const GRADE_OPTIONS = [
   { value: '六年级', label: '六年级' },
   { value: '七年级', label: '七年级' },
@@ -16,6 +14,13 @@ const SUBJECT_OPTIONS = [
   { value: '数学', label: '数学' },
   { value: '物理', label: '物理' },
   { value: '数学+物理', label: '数学+物理' },
+];
+
+const SOURCE_OPTIONS = [
+  { value: '官网', label: '官网' },
+  { value: '微信', label: '微信' },
+  { value: '朋友推荐', label: '朋友推荐' },
+  { value: '其他', label: '其他' },
 ];
 
 const CLASS_TYPE_OPTIONS = [
@@ -30,34 +35,24 @@ interface FormData {
   phone: string;
   grade: string;
   subject: string;
+  source: string;
   classType: string;
   remark: string;
 }
 
 export function Contact() {
   const ref = useSectionReveal();
-  const [iframeLoaded, setIframeLoaded] = useState(false);
-  const [iframeError, setIframeError] = useState(false);
-  const [showFallbackForm, setShowFallbackForm] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     phone: '',
     grade: '',
     subject: '',
+    source: '官网',
     classType: '',
     remark: '',
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState<{ success: boolean; message: string } | null>(null);
-
-  const handleIframeLoad = () => {
-    setIframeLoaded(true);
-  };
-
-  const handleIframeError = () => {
-    setIframeError(true);
-    setShowFallbackForm(true);
-  };
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -81,7 +76,7 @@ export function Contact() {
 
       if (response.ok && data.success) {
         setSubmitResult({ success: true, message: data.message || '报名信息已提交，小灰老师会尽快与您联系' });
-        setFormData({ name: '', phone: '', grade: '', subject: '', classType: '', remark: '' });
+        setFormData({ name: '', phone: '', grade: '', subject: '', source: '官网', classType: '', remark: '' });
       } else {
         setSubmitResult({ success: false, message: data.error || '提交失败，请稍后重试' });
       }
@@ -215,181 +210,168 @@ export function Contact() {
             </div>
 
             {/* Registration form */}
-            <div className="p-8 rounded-2xl border border-brand-border bg-brand-bg-card/50 min-h-[500px] flex flex-col">
+            <div className="p-8 rounded-2xl border border-brand-border bg-brand-bg-card/50">
               <h3 className="text-xl font-semibold text-brand-text mb-6">
                 预约报名
               </h3>
 
-              {/* Iframe mode */}
-              {!showFallbackForm && !iframeError && (
-                <div className="flex-1 relative">
-                  {/* Loading state */}
-                  {!iframeLoaded && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="w-8 h-8 border-2 border-brand-orange border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-                        <p className="text-sm text-brand-text-muted">加载报名表中...</p>
-                        <button
-                          onClick={() => setShowFallbackForm(true)}
-                          className="mt-4 text-xs text-brand-orange hover:underline"
-                        >
-                          加载失败？点击使用备用表单
-                        </button>
-                      </div>
-                    </div>
+              {submitResult ? (
+                <div className={`p-6 rounded-xl text-center ${
+                  submitResult.success 
+                    ? 'bg-green-500/10 border border-green-500/30' 
+                    : 'bg-red-500/10 border border-red-500/30'
+                }`}>
+                  <div className={`w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center ${
+                    submitResult.success ? 'bg-green-500/20' : 'bg-red-500/20'
+                  }`}>
+                    {submitResult.success ? (
+                      <svg className="w-7 h-7 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <svg className="w-7 h-7 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    )}
+                  </div>
+                  <p className={`text-lg font-medium mb-2 ${submitResult.success ? 'text-green-400' : 'text-red-400'}`}>
+                    {submitResult.success ? '提交成功' : '提交失败'}
+                  </p>
+                  <p className="text-sm text-brand-text-secondary mb-5">
+                    {submitResult.message}
+                  </p>
+                  {submitResult.success && (
+                    <button
+                      onClick={() => setSubmitResult(null)}
+                      className="text-sm text-brand-orange hover:underline"
+                    >
+                      继续提交
+                    </button>
                   )}
-                  <iframe
-                    src={FEISHU_FORM_URL}
-                    className={`w-full h-full min-h-[400px] rounded-xl border border-brand-border bg-brand-bg transition-opacity duration-300 ${
-                      iframeLoaded ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    onLoad={handleIframeLoad}
-                    onError={handleIframeError}
-                    title="飞书报名表单"
-                    allow="clipboard-write"
-                  />
                 </div>
-              )}
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-brand-text-secondary mb-1.5">
+                        学生姓名 <span className="text-brand-orange">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        placeholder="请输入学生姓名"
+                        required
+                        className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-brand-text-secondary mb-1.5">
+                        联系电话 <span className="text-brand-orange">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        placeholder="请输入手机号码"
+                        required
+                        pattern="^1[3-9]\d{9}$"
+                        className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors"
+                      />
+                    </div>
+                  </div>
 
-              {/* Fallback form mode */}
-              {(showFallbackForm || iframeError) && (
-                <div className="flex-1">
-                  {submitResult ? (
-                    <div className={`p-6 rounded-xl text-center ${
-                      submitResult.success 
-                        ? 'bg-green-500/10 border border-green-500/30' 
-                        : 'bg-red-500/10 border border-red-500/30'
-                    }`}>
-                      <div className={`w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center ${
-                        submitResult.success ? 'bg-green-500/20' : 'bg-red-500/20'
-                      }`}>
-                        {submitResult.success ? (
-                          <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        ) : (
-                          <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        )}
-                      </div>
-                      <p className={`font-medium mb-2 ${submitResult.success ? 'text-green-400' : 'text-red-400'}`}>
-                        {submitResult.success ? '提交成功' : '提交失败'}
-                      </p>
-                      <p className="text-sm text-brand-text-secondary mb-4">
-                        {submitResult.message}
-                      </p>
-                      {submitResult.success && (
-                        <button
-                          onClick={() => setSubmitResult(null)}
-                          className="text-sm text-brand-orange hover:underline"
-                        >
-                          继续提交
-                        </button>
-                      )}
-                    </div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <div>
-                        <label className="block text-sm text-brand-text-secondary mb-1.5">
-                          学生姓名 <span className="text-brand-orange">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          placeholder="请输入学生姓名"
-                          required
-                          className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm text-brand-text-secondary mb-1.5">
-                          联系电话 <span className="text-brand-orange">*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => handleInputChange('phone', e.target.value)}
-                          placeholder="请输入手机号码"
-                          required
-                          pattern="^1[3-9]\d{9}$"
-                          className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors"
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm text-brand-text-secondary mb-1.5">
-                            当前年级 <span className="text-brand-orange">*</span>
-                          </label>
-                          <select
-                            value={formData.grade}
-                            onChange={(e) => handleInputChange('grade', e.target.value)}
-                            required
-                            className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text focus:outline-none focus:border-brand-orange/50 transition-colors appearance-none"
-                          >
-                            <option value="">请选择</option>
-                            {GRADE_OPTIONS.map(opt => (
-                              <option key={opt.value} value={opt.value}>{opt.label}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm text-brand-text-secondary mb-1.5">
-                            辅导科目
-                          </label>
-                          <select
-                            value={formData.subject}
-                            onChange={(e) => handleInputChange('subject', e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text focus:outline-none focus:border-brand-orange/50 transition-colors appearance-none"
-                          >
-                            <option value="">请选择</option>
-                            {SUBJECT_OPTIONS.map(opt => (
-                              <option key={opt.value} value={opt.value}>{opt.label}</option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm text-brand-text-secondary mb-1.5">
-                          意向班型
-                        </label>
-                        <select
-                          value={formData.classType}
-                          onChange={(e) => handleInputChange('classType', e.target.value)}
-                          className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text focus:outline-none focus:border-brand-orange/50 transition-colors appearance-none"
-                        >
-                          <option value="">请选择</option>
-                          {CLASS_TYPE_OPTIONS.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm text-brand-text-secondary mb-1.5">
-                          备注信息
-                        </label>
-                        <textarea
-                          value={formData.remark}
-                          onChange={(e) => handleInputChange('remark', e.target.value)}
-                          placeholder="请描述学生目前学习情况与目标（选填）"
-                          rows={3}
-                          className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors resize-none"
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        disabled={submitting}
-                        className="w-full py-3.5 bg-brand-orange text-brand-bg font-semibold rounded-xl hover:bg-brand-orange-hover transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-orange/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-brand-text-secondary mb-1.5">
+                        当前年级 <span className="text-brand-orange">*</span>
+                      </label>
+                      <select
+                        value={formData.grade}
+                        onChange={(e) => handleInputChange('grade', e.target.value)}
+                        required
+                        className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text focus:outline-none focus:border-brand-orange/50 transition-colors appearance-none"
                       >
-                        {submitting ? '提交中...' : '提交预约'}
-                      </button>
-                      <p className="text-xs text-brand-text-muted text-center">
-                        提交后小灰老师会尽快与您联系确认
-                      </p>
-                    </form>
-                  )}
-                </div>
+                        <option value="">请选择年级</option>
+                        {GRADE_OPTIONS.map(opt => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm text-brand-text-secondary mb-1.5">
+                        辅导科目
+                      </label>
+                      <select
+                        value={formData.subject}
+                        onChange={(e) => handleInputChange('subject', e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text focus:outline-none focus:border-brand-orange/50 transition-colors appearance-none"
+                      >
+                        <option value="">请选择科目</option>
+                        {SUBJECT_OPTIONS.map(opt => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-brand-text-secondary mb-1.5">
+                        意向班型
+                      </label>
+                      <select
+                        value={formData.classType}
+                        onChange={(e) => handleInputChange('classType', e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text focus:outline-none focus:border-brand-orange/50 transition-colors appearance-none"
+                      >
+                        <option value="">请选择班型</option>
+                        {CLASS_TYPE_OPTIONS.map(opt => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm text-brand-text-secondary mb-1.5">
+                        信息来源
+                      </label>
+                      <select
+                        value={formData.source}
+                        onChange={(e) => handleInputChange('source', e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text focus:outline-none focus:border-brand-orange/50 transition-colors appearance-none"
+                      >
+                        {SOURCE_OPTIONS.map(opt => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-brand-text-secondary mb-1.5">
+                      备注信息
+                    </label>
+                    <textarea
+                      value={formData.remark}
+                      onChange={(e) => handleInputChange('remark', e.target.value)}
+                      placeholder="请描述学生目前学习情况与目标（选填）"
+                      rows={3}
+                      className="w-full px-4 py-3 rounded-xl bg-brand-bg border border-brand-border text-brand-text placeholder:text-brand-text-muted focus:outline-none focus:border-brand-orange/50 transition-colors resize-none"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full py-3.5 bg-brand-orange text-brand-bg font-semibold rounded-xl hover:bg-brand-orange-hover transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-orange/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {submitting ? '提交中...' : '提交预约'}
+                  </button>
+
+                  <p className="text-xs text-brand-text-muted text-center pt-2">
+                    信息仅用于课程咨询，不会外泄
+                  </p>
+                </form>
               )}
             </div>
           </div>
