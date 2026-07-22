@@ -133,10 +133,9 @@ export function Contact() {
                 预约报名
               </h3>
               <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  alert('请微信联系小灰老师完成报名：18559689449');
-                }}
+                action="https://bcncx6oe0mh4.feishu.cn/share/base/shrcnDxfxTZp8dM9BxYmQ9B6VLb"
+                method="get"
+                target="_blank"
                 className="space-y-4"
               >
                 <div>
