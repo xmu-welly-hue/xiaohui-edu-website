@@ -142,15 +142,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare fields for Feishu Bitable
+    // Note: Multi-select fields in Feishu Bitable require array format
     const fields: Record<string, unknown> = {
       '姓名': name,
       '电话': phone,
       '年级': grade,
-      '科目': subject || '',
-      '来源': source || '官网',
-      '意向班型': classType || '',
+      '科目': subject ? [subject] : [],
+      '来源': source ? [source || '官网'] : ['官网'],
+      '意向班型': classType ? [classType] : [],
       '备注': remark || '',
-      '提交时间': new Date().toISOString(),
     };
 
     console.log(`[Feishu API] Processing submission for: ${name}, ${phone}, ${grade}`);
