@@ -29,7 +29,7 @@ const CLASS_TYPES = [
     tagline: '高阶方法 · 降维打击',
     desc: '为学有余力的同学提供超纲知识与高阶方法，从容应对四校八大自招选拔。',
     highlight: false,
-    href: 'https://a5830b5a-9d65-44a9-a899-081d4966390b.dev.coze.site',
+    href: 'https://xiaohui-advanced.netlify.app/',
   },
 ];
 
