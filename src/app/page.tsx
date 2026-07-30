@@ -4,6 +4,7 @@ import { Teacher } from '@/components/Teacher';
 import { Features } from '@/components/Features';
 import { Pricing } from '@/components/Pricing';
 import { Partner } from '@/components/Partner';
+import { TutoringService } from '@/components/TutoringService';
 import { FAQ } from '@/components/FAQ';
 import { Contact } from '@/components/Contact';
 import { Footer } from '@/components/Footer';
@@ -17,6 +18,7 @@ export default function Home() {
       <Features />
       <Pricing />
       <Partner />
+      <TutoringService />
       <FAQ />
       <Contact />
       <Footer />
