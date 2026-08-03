@@ -20,8 +20,8 @@ const FEATURES = [
   },
   {
     icon: '💬',
-    title: '作业当日答疑',
-    desc: '校内作业遇到难题？当日拍照提问，小灰老师当天解答，不让问题过夜，知识盲区及时清零。',
+    title: '作业答疑',
+    desc: '校内作业遇到难题？拍照发给小灰老师，详细批改讲解，让知识盲区及时清零。',
   },
   {
     icon: '📝',
@@ -58,10 +58,18 @@ export function Features() {
             {FEATURES.map((f, i) => (
               <div
                 key={f.title}
-                className={`group p-8 rounded-2xl border border-brand-border bg-brand-bg-card/50 hover:border-brand-orange/30 hover:bg-brand-bg-card transition-all duration-300 hover:-translate-y-1 ${
-                  i >= 3 ? 'lg:col-span-1' : ''
+                className={`group relative p-8 rounded-2xl border border-brand-border bg-brand-bg-card/50 hover:border-brand-orange/30 hover:bg-brand-bg-card transition-all duration-300 hover:-translate-y-1 overflow-hidden ${
+                  i === 3 ? 'lg:col-start-2' : ''
                 }`}
               >
+                {/* Number badge */}
+                <span className="absolute top-5 right-6 text-5xl font-bold font-mono text-brand-orange/[0.08] group-hover:text-brand-orange/[0.18] transition-colors duration-300 select-none">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+
+                {/* Top accent line */}
+                <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-brand-orange/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
                 {/* Icon */}
                 <div className="text-3xl mb-5 w-14 h-14 flex items-center justify-center rounded-xl bg-brand-orange/10 group-hover:bg-brand-orange/15 transition-colors">
                   {f.icon}

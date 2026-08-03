@@ -21,14 +21,14 @@ const CLASS_TYPES = [
     name: '冲刺班',
     tagline: '冲刺满分 · 压轴突破',
     desc: '面向中上水平同学，专攻压轴题与高难度综合题，训练解题思维与应试策略。',
-    highlight: true,
+    highlight: false,
     href: null,
   },
   {
     name: '超纲班',
     tagline: '高阶方法 · 降维打击',
     desc: '为学有余力的同学提供超纲知识与高阶方法，从容应对四校八大自招选拔。',
-    highlight: false,
+    highlight: true,
     href: 'https://xiaohui-advanced.netlify.app/',
   },
 ];

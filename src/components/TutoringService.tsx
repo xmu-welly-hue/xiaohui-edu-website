@@ -11,7 +11,7 @@ const SERVICES = [
   {
     icon: '💬',
     title: '日常答疑',
-    desc: '学校不会的题随时问，当天必回复，不让问题留到第二天。',
+    desc: '学校不会的题随时问，小灰老师及时回复讲解，不让问题积压。',
   },
   {
     icon: '📅',
@@ -103,7 +103,7 @@ export function TutoringService() {
           <div className="mt-12 text-center">
             <p className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-orange/10 text-brand-orange text-sm font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-orange" />
-              以上服务全部免费，包含在课时费中
+              本服务针对已报名学生，不另外收费
             </p>
           </div>
         </div>
