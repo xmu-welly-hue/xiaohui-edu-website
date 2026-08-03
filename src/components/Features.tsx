@@ -28,6 +28,11 @@ const FEATURES = [
     title: '每日一题打卡',
     desc: '每天推送一道精选好题，保持手感与思维活跃度，积少成多，量变引发质变。',
   },
+  {
+    icon: '📊',
+    title: '专属学情管理系统',
+    desc: '专属学情档案一站式沉淀：上课留痕、作业进度、成绩趋势、错题归档全部记录，家长免注册扫码即看，孩子学习进展透明可见。',
+  },
 ];
 
 export function Features() {
@@ -58,9 +63,7 @@ export function Features() {
             {FEATURES.map((f, i) => (
               <div
                 key={f.title}
-                className={`group relative p-8 rounded-2xl border border-brand-border bg-brand-bg-card/50 hover:border-brand-orange/30 hover:bg-brand-bg-card transition-all duration-300 hover:-translate-y-1 overflow-hidden ${
-                  i === 3 ? 'lg:col-start-2' : ''
-                }`}
+                className={`group relative p-8 rounded-2xl border border-brand-border bg-brand-bg-card/50 hover:border-brand-orange/30 hover:bg-brand-bg-card transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
               >
                 {/* Number badge */}
                 <span className="absolute top-5 right-6 text-5xl font-bold font-mono text-brand-orange/[0.08] group-hover:text-brand-orange/[0.18] transition-colors duration-300 select-none">
