@@ -2,21 +2,36 @@
 
 import { useSectionReveal } from '@/hooks/use-section-reveal';
 
-const CAPABILITIES = [
+const FEATURES = [
   {
-    icon: '🗂️',
-    title: '学生档案 · 一人一档',
-    desc: '从报名起每个孩子建专属档案，上课记录、作业反馈、阶段测评全部沉淀，学情翻档案一目了然。',
+    icon: '🔗',
+    title: '免注册即看',
+    desc: '不用下载 App、不用注册账号，专属链接 + 验证码随时查看。',
   },
   {
-    icon: '💳',
-    title: '课时账本 · 透明可查',
-    desc: '每次课自动记入课时账本，剩余课时、未结清课时费家长随时可查，费用结算明明白白。',
+    icon: '📖',
+    title: '上课留痕',
+    desc: '每节课的上课内容、课堂表现都有记录，孩子的成长轨迹随时回看。',
   },
   {
     icon: '📝',
-    title: '错题本 · 错题不白错',
-    desc: '孩子做错的题全部进错题本按知识点归类，阶段复习对着错题本查漏补缺，错过的题不再错第二遍。',
+    title: '作业进度',
+    desc: '老师布置了什么作业、完成没有，一目了然。',
+  },
+  {
+    icon: '📈',
+    title: '成绩趋势',
+    desc: '历次考试成绩完整记录，进步退步一眼看清。',
+  },
+  {
+    icon: '📸',
+    title: '错题沉淀',
+    desc: '孩子错题拍照归档、按知识点分类，复习时随时翻看。',
+  },
+  {
+    icon: '🔒',
+    title: '隐私安心',
+    desc: '每个孩子独立验证码，家长只能看到自家孩子，只读模式不可修改。',
   },
 ];
 
@@ -55,33 +70,33 @@ export function StudentSystem() {
               Student System
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-brand-text mb-4">
-              📊 学情数据化管理
+              📱 家长专属 · 孩子学情随时看
             </h2>
             <p className="text-brand-text-secondary max-w-lg mx-auto">
-              每个孩子的学习轨迹，都看得见
+              免注册、扫码即看，孩子的学习进展透明可见
             </p>
           </div>
 
-          {/* Capabilities grid */}
+          {/* Features grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {CAPABILITIES.map((c) => (
+            {FEATURES.map((f) => (
               <div
-                key={c.title}
+                key={f.title}
                 className="group p-8 rounded-2xl border border-brand-border bg-brand-bg-card/50 hover:border-brand-orange/30 hover:bg-brand-bg-card transition-all duration-300 hover:-translate-y-1"
               >
                 {/* Icon */}
                 <div className="text-3xl mb-5 w-14 h-14 flex items-center justify-center rounded-xl bg-brand-orange/10 group-hover:bg-brand-orange/15 transition-colors">
-                  {c.icon}
+                  {f.icon}
                 </div>
 
                 {/* Title */}
                 <h3 className="text-lg font-semibold text-brand-text mb-3 group-hover:text-brand-orange transition-colors">
-                  {c.title}
+                  {f.title}
                 </h3>
 
                 {/* Description */}
                 <p className="text-sm text-brand-text-secondary leading-relaxed">
-                  {c.desc}
+                  {f.desc}
                 </p>
               </div>
             ))}
@@ -99,7 +114,7 @@ export function StudentSystem() {
               <span aria-hidden="true">→</span>
             </a>
             <p className="mt-6 text-xs text-brand-text-muted">
-              小灰教育专属学生管理系统 · 课时透明 · 学情留痕 · 错题沉淀
+              小灰教育家长端 · 免注册 · 只读 · 专属验证码 · 隐私安心
             </p>
           </div>
         </div>
