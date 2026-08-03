@@ -5,6 +5,7 @@ import { Features } from '@/components/Features';
 import { Pricing } from '@/components/Pricing';
 import { Partner } from '@/components/Partner';
 import { TutoringService } from '@/components/TutoringService';
+import { StudentSystem } from '@/components/StudentSystem';
 import { FAQ } from '@/components/FAQ';
 import { Contact } from '@/components/Contact';
 import { Footer } from '@/components/Footer';
@@ -19,6 +20,7 @@ export default function Home() {
       <Pricing />
       <Partner />
       <TutoringService />
+      <StudentSystem />
       <FAQ />
       <Contact />
       <Footer />

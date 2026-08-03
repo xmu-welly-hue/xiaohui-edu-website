@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { label: '定价', href: '#pricing' },
   { label: '学习伙伴', href: '#partner' },
   { label: '答疑服务', href: '#tutoring' },
+  { label: '学情管理', href: '#student-system' },
   { label: 'FAQ', href: '#faq' },
   { label: '联系', href: '#contact' },
 ];
