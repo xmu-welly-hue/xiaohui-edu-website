@@ -56,9 +56,7 @@ export function Navbar() {
             </a>
           ))}
           <a
-            href="https://bcncx6oe0mh4.feishu.cn/share/base/shrcnDxfxTZp8dM9BxYmQ9B6VLb"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#contact"
             className="ml-3 px-4 py-2 text-sm font-medium bg-brand-orange text-brand-bg rounded-xl hover:bg-brand-orange-hover transition-all duration-200 hover:-translate-y-0.5"
           >
             预约试听
@@ -107,9 +105,7 @@ export function Navbar() {
             </a>
           ))}
           <a
-            href="https://bcncx6oe0mh4.feishu.cn/share/base/shrcnDxfxTZp8dM9BxYmQ9B6VLb"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#contact"
             onClick={handleLinkClick}
             className="mt-2 px-4 py-2.5 text-sm font-medium bg-brand-orange text-brand-bg rounded-xl text-center hover:bg-brand-orange-hover transition-colors"
           >

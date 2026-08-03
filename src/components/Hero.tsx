@@ -48,9 +48,7 @@ export function Hero() {
             了解课程定价
           </a>
           <a
-            href="https://bcncx6oe0mh4.feishu.cn/share/base/shrcnDxfxTZp8dM9BxYmQ9B6VLb"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#contact"
             className="w-full sm:w-auto px-8 py-3.5 border border-brand-border text-brand-text rounded-xl hover:border-brand-orange/50 hover:text-brand-orange transition-all duration-200 hover:-translate-y-0.5"
           >
             立即报名
