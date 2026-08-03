@@ -105,7 +105,7 @@ export function StudentSystem() {
           {/* Entry button */}
           <div className="mt-12 text-center">
             <a
-              href="https://xiaohui-student.coze.site"
+              href="https://xiaohui-student.coze.site/parent"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-3.5 bg-brand-orange text-brand-bg font-semibold rounded-xl hover:bg-brand-orange-hover transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-orange/20"
