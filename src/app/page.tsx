@@ -2,6 +2,7 @@ import { Navbar } from '@/components/Navbar';
 import { Hero } from '@/components/Hero';
 import { Teacher } from '@/components/Teacher';
 import { Features } from '@/components/Features';
+import { PhysicsCurriculum } from '@/components/PhysicsCurriculum';
 import { Pricing } from '@/components/Pricing';
 import { Partner } from '@/components/Partner';
 import { TutoringService } from '@/components/TutoringService';
@@ -17,6 +18,7 @@ export default function Home() {
       <Hero />
       <Teacher />
       <Features />
+      <PhysicsCurriculum />
       <Pricing />
       <Partner />
       <TutoringService />

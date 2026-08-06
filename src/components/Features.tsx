@@ -6,7 +6,7 @@ const FEATURES = [
   {
     icon: '📚',
     title: '沪教版独立题库',
-    desc: '针对沪教版（五四制）教材，精心整理历年真题、模考卷与自招题，按知识点分层归类，精准匹配考纲。',
+    desc: '沪教版自建题库，数学+物理双科，紧扣上海中考/模考/自招，按知识点分层归类，精准匹配考纲。',
   },
   {
     icon: '🎯',
@@ -32,6 +32,11 @@ const FEATURES = [
     icon: '📊',
     title: '专属学情管理系统',
     desc: '专属学情档案一站式沉淀：上课留痕、作业进度、成绩趋势、错题归档全部记录，家长免注册扫码即看，孩子学习进展透明可见。',
+  },
+  {
+    icon: '🧪',
+    title: '实验专项',
+    desc: '中考物理实验探究题约15分，教案专门设计实验板块，实验原理与操作规范两手抓，实验题不丢分。',
   },
 ];
 
@@ -63,7 +68,9 @@ export function Features() {
             {FEATURES.map((f, i) => (
               <div
                 key={f.title}
-                className={`group relative p-8 rounded-2xl border border-brand-border bg-brand-bg-card/50 hover:border-brand-orange/30 hover:bg-brand-bg-card transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
+                className={`group relative p-8 rounded-2xl border border-brand-border bg-brand-bg-card/50 hover:border-brand-orange/30 hover:bg-brand-bg-card transition-all duration-300 hover:-translate-y-1 overflow-hidden ${
+                  i === 6 ? 'lg:col-start-2' : ''
+                }`}
               >
                 {/* Number badge */}
                 <span className="absolute top-5 right-6 text-5xl font-bold font-mono text-brand-orange/[0.08] group-hover:text-brand-orange/[0.18] transition-colors duration-300 select-none">

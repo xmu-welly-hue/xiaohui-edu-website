@@ -375,6 +375,10 @@ export function Contact() {
               )}
             </div>
           </div>
+
+          <p className="mt-10 text-center text-sm text-brand-orange font-medium">
+            物理班同步招生中
+          </p>
         </div>
       </div>
     </section>

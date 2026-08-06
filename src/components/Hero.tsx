@@ -35,9 +35,25 @@ export function Hero() {
         <p className="text-lg sm:text-xl md:text-2xl text-brand-text-secondary mb-4 animate-fade-in-up delay-200 leading-relaxed">
           上海初中数学 · 物理
         </p>
-        <p className="text-base sm:text-lg text-brand-text-muted mb-10 animate-fade-in-up delay-300">
+        <p className="text-base sm:text-lg text-brand-text-muted mb-6 animate-fade-in-up delay-300">
           厦大毕业 · 11年一线教学 · 1对1精准辅导
         </p>
+
+        {/* Subject entries */}
+        <div className="flex items-center justify-center gap-3 mb-8 animate-fade-in-up delay-350">
+          <a
+            href="#pricing"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-brand-border bg-brand-bg-card/50 text-sm text-brand-text hover:border-brand-orange/50 hover:text-brand-orange transition-colors duration-200"
+          >
+            📐 数学课程
+          </a>
+          <a
+            href="#physics"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-brand-border bg-brand-bg-card/50 text-sm text-brand-text hover:border-brand-orange/50 hover:text-brand-orange transition-colors duration-200"
+          >
+            🔬 物理课程
+          </a>
+        </div>
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-400">
